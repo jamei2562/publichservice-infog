@@ -1,0 +1,54 @@
+package org.fog.placement;
+
+import org.apache.commons.math3.util.Pair;
+import org.fog.application.AppEdge;
+import org.fog.application.AppModule;
+import org.fog.application.Application;
+import org.fog.entities.FogDevice;
+import org.fog.entities.Tuple;
+import org.fog.entities.ControllerComponent;
+import org.fog.entities.MicroserviceFogDevice;
+import org.fog.entities.PlacementRequest;
+import org.fog.utils.Logger;
+import org.fog.utils.ModuleLaunchConfig;
+
+import java.util.*;
+
+/**
+ * Created by Samodha Pallewatta on 6/1/2021.
+ * Per Placement Request Placement
+ */
+public class DistributedMicroservicePlacementLogic implements MicroservicePlacementLogic {
+    /**
+     * Fog network related details
+     */
+    FogDevice fogDevice; //fog devices considered by FON for placements of requests
+    List<PlacementRequest> placementRequests; // requests to be processed
+    protected Map<Integer, Map<String, Double>> resourceAvailability;
+    private Map<String, Application> applicationInfo = new HashMap<>();
+    private Map<String, String> moduleToApp = new HashMap<>();
+
+    int fonID;
+
+    protected Double currentCpuLoad = 0.0;
+    protected List<String> currentModuleMap = new ArrayList<>();
+    protected Map<String, Double> currentModuleLoadMap = new HashMap<>();
+    protected Map<String, Integer> currentModuleInstanceNum = new HashMap<>();
+
+    protected Map<PlacementRequest, Integer> prStatus = new HashMap<>();
+
+
+    public DistributedMicroservicePlacementLogic(int fonID) {
+        setFONId(fonID);
+    }
+
+    public void setFONId(int id) {
+        fonID = id;
+    }
+
+    public int getFonID() {
+        return fonID;
+    }
+
+
+    @Override
